@@ -1,5 +1,5 @@
 # 0x04. Files manager
-This directory contains the set the solutions for the task below and is also a project called File manager.
+This directory contains the solutions for the task below and is also a project called File manager.
 
 # Task
 ## 0. Redis utils
