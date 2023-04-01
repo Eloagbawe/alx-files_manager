@@ -1,6 +1,6 @@
 import sha1 from 'sha1';
 import { v4 as uuidv4 } from 'uuid';
-
+import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
@@ -30,8 +30,14 @@ class AuthController {
     const id = await redisClient.get(`auth_${token}`);
 
     if (id) {
-      await redisClient.del(`auth_${token}`);
-      res.status(204).send();
+      const usersCollection = dbClient.db.collection('users');
+      const user = await usersCollection.findOne({ _id: ObjectId(id) });
+      if (user) {
+        await redisClient.del(`auth_${token}`);
+        res.status(204).send();
+      } else {
+        res.status(401).json({ error: 'Unauthorized' });
+      }
     } else {
       res.status(401).json({ error: 'Unauthorized' });
     }
