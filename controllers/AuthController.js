@@ -8,11 +8,16 @@ class AuthController {
   static async getConnect(req, res) {
     let token;
     const usersCollection = dbClient.db.collection('users');
-    if (req.headers.authorization && req.headers.authorization.startsWith('Basic')) {
+    if (req.header('Authorization') && req.header('Authorization').startsWith('Basic')) {
       // eslint-disable-next-line prefer-destructuring
-      token = req.headers.authorization.split(' ')[1];
+      token = req.header('Authorization').split(' ')[1];
       const decodedToken = Buffer.from(token, 'base64').toString('ascii');
-      const [email, password] = decodedToken.split(':');
+      const userData = decodedToken.split(':');
+      if (userData.length !== 2) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+      }
+      const [email, password] = userData;
       const user = await usersCollection.findOne({ email, password: sha1(password) });
       if (user) {
         const newToken = uuidv4();
@@ -26,7 +31,7 @@ class AuthController {
   }
 
   static async getDisconnect(req, res) {
-    const token = req.headers['x-token'];
+    const token = req.header('X-Token');
     const id = await redisClient.get(`auth_${token}`);
 
     if (id) {
