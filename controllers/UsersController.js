@@ -2,6 +2,7 @@ import sha1 from 'sha1';
 import dbClient from '../utils/db';
 
 class UsersController {
+  // eslint-disable-next-line consistent-return
   static async postNew(req, res) {
     const { email, password } = req.body;
     if (!email) return res.status(400).json({ error: 'Missing email' });
@@ -14,7 +15,7 @@ class UsersController {
       }
       const hashedPassword = sha1(password);
       const { insertedId } = await users.insertOne({ email, password: hashedPassword });
-      const user = { id: insertedId.toString(), email };
+      const user = { id: insertedId, email };
       return res.status(201).json(user);
     });
   }
