@@ -20,7 +20,7 @@ class AuthController {
         await redisClient.set(key, user._id.toString(), 60 * 60 * 24);
         res.status(200).json({ token: newToken });
       } else {
-        res.status(400).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
       }
     }
   }
