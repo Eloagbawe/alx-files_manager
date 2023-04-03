@@ -64,8 +64,7 @@ class FilesController {
       res.status(201).json({ id: newFile.insertedId, ...fileData });
       return;
     }
-    // const relativePath = process.env.FOLDER_PATH || '/tmp/files_manager';
-    const relativePath = process.env.FOLDER_PATH || './files';
+    const relativePath = process.env.FOLDER_PATH || '/tmp/files_manager';
 
     if (!fs.existsSync(relativePath)) {
       fs.mkdirSync(relativePath);
