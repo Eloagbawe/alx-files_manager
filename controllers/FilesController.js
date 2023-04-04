@@ -243,12 +243,9 @@ class FilesController {
       res.status(404).json({ error: 'Not found' });
       return;
     }
-
-    const mimeType = mime.lookup(file.name);
-    const charset = mime.charset(mimeType);
     const contentType = mime.contentType(file.name);
-    const data = await fs.promises.readFile(file.localPath, charset);
-    res.status(200).header('Content-Type', contentType).send(data);
+    const data = await fs.promises.readFile(file.localPath);
+    res.header('Content-Type', contentType).status(200).send(data);
   }
 }
 
