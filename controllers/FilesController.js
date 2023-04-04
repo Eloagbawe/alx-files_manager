@@ -221,7 +221,7 @@ class FilesController {
     const filesCollection = dbClient.db.collection('files');
     const file = await filesCollection.findOne({ _id: ObjectId(fileId) });
     if (!file) {
-      res.status(404).json({ error: 'Not Found' });
+      res.status(404).json({ error: 'Not found' });
       return;
     }
     const token = req.header('X-Token');
@@ -230,7 +230,7 @@ class FilesController {
     const user = await usersCollection.findOne({ _id: ObjectId(id) });
 
     if ((!id || !user || file.userId.toString() !== id) && !file.isPublic) {
-      res.status(404).json({ error: 'Not Found' });
+      res.status(404).json({ error: 'Not found' });
       return;
     }
 
@@ -240,7 +240,7 @@ class FilesController {
     }
 
     if (!fs.existsSync(file.localPath)) {
-      res.status(404).json({ error: 'Not Found' });
+      res.status(404).json({ error: 'Not found' });
       return;
     }
 
