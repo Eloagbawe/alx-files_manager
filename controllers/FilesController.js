@@ -246,8 +246,9 @@ class FilesController {
 
     const mimeType = mime.lookup(file.name);
     const charset = mime.charset(mimeType);
+    const contentType = mime.contentType(file.name);
     const data = await fs.promises.readFile(file.localPath, charset);
-    res.status(200).send(data);
+    res.status(200).header('Content-Type', contentType).send(data);
   }
 }
 
