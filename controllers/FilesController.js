@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import mime from 'mime-types';
+import Queue from 'bull';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
@@ -79,6 +80,10 @@ class FilesController {
     });
     const newFile = await filesCollection.insertOne({ ...fileData, localPath: fullPath });
     res.status(201).json({ id: newFile.insertedId, ...fileData });
+    if (type === 'image') {
+      const queue = new Queue('fileQueue');
+      queue.add({ fileId: newFile.insertedId, userId });
+    }
   }
 
   static async getShow(req, res) {
@@ -243,9 +248,19 @@ class FilesController {
       res.status(404).json({ error: 'Not found' });
       return;
     }
+    let path = file.localPath;
+    const { size } = req.query;
+
+    if (size) {
+      path = `${file.localPath}_${size}`;
+    }
     const contentType = mime.contentType(file.name);
-    const data = await fs.promises.readFile(file.localPath);
-    res.header('Content-Type', contentType).status(200).send(data);
+    try {
+      const data = await fs.promises.readFile(path);
+      res.header('Content-Type', contentType).status(200).send(data);
+    } catch (err) {
+      res.status(404).json({ error: 'Not found' });
+    }
   }
 }
 
