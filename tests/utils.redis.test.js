@@ -26,4 +26,4 @@ describe('redis app storage', () => {
       }, 2500);
     });
   });
-})
+});
