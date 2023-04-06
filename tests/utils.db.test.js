@@ -18,17 +18,17 @@ describe('mongodb app storage', () => {
 
   it('tests the db isAlive method', function() {
     expect(dbClient.isAlive()).to.be.true;
-  })
+  });
   it('tests the the db nbUsers method', (done) => {
     dbClient.nbUsers().then((data) => {
       expect(data).to.be.equal(0);
       done();
-    })
-  })
+    });
+  });
   it('tests the the db nbFiles method', (done) => {
     dbClient.nbFiles().then((data) => {
       expect(data).to.be.equal(0);
       done();
-    })
-  })
-})
+    });
+  });
+});

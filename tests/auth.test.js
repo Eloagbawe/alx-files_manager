@@ -75,4 +75,4 @@ describe('tests user authentication', () => {
     });
   });
 
-})
+});
